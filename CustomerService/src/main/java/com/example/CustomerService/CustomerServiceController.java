@@ -1,6 +1,8 @@
 package com.example.CustomerService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @EnableAutoConfiguration
@@ -44,6 +47,14 @@ public @ResponseBody List<Customer> getAllCustomers() throws Exception{
 }
 @RequestMapping(value="/Customers",method=RequestMethod.POST)
 	  public void addCustomers(@RequestBody Customer customer) throws Exception{
+	 RestTemplate restTemplate = new RestTemplate();
+	 long pid=customer.getPolicyid();
+	 Map<String, Long> vars = new HashMap<String, Long>();
+	 vars.put("pid", pid);
+	 
+	 
+	Policy policy=restTemplate.getForObject("http://localhost:8888/data/Policy/{pid}",Policy.class,vars);
+	customer.setPolicy(policy);
 			 this.customerService.createCustomer(customer);
 		
 	  }

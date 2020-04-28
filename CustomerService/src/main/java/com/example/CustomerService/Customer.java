@@ -10,8 +10,11 @@ public class Customer {
 	long id;
 	String name;
 	long phnum;
+	long policyid;
 	 @Embedded
 	Invoice invoice;
+	 @Embedded
+	 Policy policy;
 	 	public Customer() {
 		
 	}
@@ -38,6 +41,18 @@ public class Customer {
 	}
 	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;
+	}
+	public Policy getPolicy() {
+		return policy;
+	}
+	public void setPolicy(Policy policy) {
+		this.policy = policy;
+	}
+	public long getPolicyid() {
+		return policyid;
+	}
+	public void setPolicyid(long policyid) {
+		this.policyid = policyid;
 	}
 	
 	
