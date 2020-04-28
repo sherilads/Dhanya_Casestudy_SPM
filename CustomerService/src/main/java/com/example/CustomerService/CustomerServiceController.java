@@ -25,6 +25,8 @@ public class CustomerServiceController {
 @Autowired
 private CustometService customerService;
 
+RestTemplate restTemplate = new RestTemplate();
+
 @Autowired
 private DiscoveryClient discoveryClient;
 
@@ -47,7 +49,7 @@ public @ResponseBody List<Customer> getAllCustomers() throws Exception{
 }
 @RequestMapping(value="/Customers",method=RequestMethod.POST)
 	  public void addCustomers(@RequestBody Customer customer) throws Exception{
-	 RestTemplate restTemplate = new RestTemplate();
+	
 	 long pid=customer.getPolicyid();
 	 Map<String, Long> vars = new HashMap<String, Long>();
 	 vars.put("pid", pid);
@@ -62,6 +64,12 @@ public @ResponseBody List<Customer> getAllCustomers() throws Exception{
 
 @RequestMapping(method=RequestMethod.PUT, value="/Customers/{id}") 
 public void updateCategory(@RequestBody Customer customer, @PathVariable long id) {
+	long pid=customer.getPolicyid();
+	 Map<String, Long> vars = new HashMap<String, Long>();
+	 vars.put("pid", pid);	 
+	 
+	Policy policy=restTemplate.getForObject("http://localhost:8888/data/Policy/{pid}",Policy.class,vars);
+	customer.setPolicy(policy);
 	  this.customerService.updateCustomer(customer, id); }
 
 @RequestMapping(method=RequestMethod.DELETE, value="/Customers/{id}") 
